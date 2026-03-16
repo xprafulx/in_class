@@ -1,0 +1,59 @@
+name: News Pipeline
+
+on:
+  workflow_dispatch:
+  schedule:
+    # Monday–Friday at 10:00, 13:00, 15:00, 23:00 Danish time (approx. CET = UTC+1)
+    - cron: "0 9 * * 1-5"
+    - cron: "0 12 * * 1-5"
+    - cron: "0 14 * * 1-5"
+    - cron: "0 22 * * 1-5"
+
+permissions:
+  contents: write
+
+jobs:
+  run-news-pipeline:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run pipeline
+        env:
+          AV_API_KEY: ${{ secrets.AV_API_KEY }}
+          TICKERS: AAPL
+          NEWS_LIMIT: 15
+          LOOKBACK_DAYS: 7
+          SQL_DB_PATH: data/news.db
+          CHROMA_DB_PATH: data/chroma_db
+          CHROMA_COLLECTION: news_articles
+        run: |
+          python run_pipeline.py
+
+      - name: Commit updated data files
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          mkdir -p data outputs
+          git add data outputs
+
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+          else
+            git commit -m "Update news pipeline data"
+            git push
+          fi
