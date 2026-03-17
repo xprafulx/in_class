@@ -1,11 +1,269 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset="utf-8">
-    <title>Financial News Dashboard</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Financial News Pipeline Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f7f7fb;
+      color: #2f2f2f;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 32px 20px 60px;
+    }
+
+    h1 {
+      margin-bottom: 8px;
+      color: #4e4471;
+    }
+
+    .subtitle {
+      color: #666;
+      margin-bottom: 28px;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 18px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .card h2 {
+      font-size: 1rem;
+      margin-top: 0;
+      color: #4e4471;
+    }
+
+    .metric {
+      font-size: 1.8rem;
+      font-weight: bold;
+      margin: 8px 0 0;
+    }
+
+    .panel {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      margin-bottom: 20px;
+    }
+
+    .chart-wrap {
+      position: relative;
+      width: 100%;
+      min-height: 320px;
+    }
+
+    .latest-section h3 {
+      margin-bottom: 8px;
+      color: #4e4471;
+    }
+
+    .latest-section ul {
+      margin-top: 0;
+      padding-left: 20px;
+    }
+
+    .latest-section li {
+      margin-bottom: 8px;
+    }
+
+    .meta {
+      color: #666;
+      font-size: 0.95rem;
+    }
+
+    a {
+      color: #426eb4;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .footer-note {
+      margin-top: 20px;
+      color: #666;
+      font-size: 0.95rem;
+    }
+  </style>
 </head>
 <body>
-    <h1>Financial News Dashboard</h1>
-    <p>This page will be generated automatically by the pipeline.</p>
+  <div class="container">
+    <h1>Financial News Pipeline Dashboard</h1>
+    <p class="subtitle">GitHub Pages report generated automatically from the pipeline artifacts.</p>
+
+    <div class="cards">
+      <div class="card">
+        <h2>Last pipeline update</h2>
+        <div class="metric" style="font-size:1.05rem;">2026-03-17T11:19:06.525836+00:00</div>
+      </div>
+      <div class="card">
+        <h2>Articles fetched</h2>
+        <div class="metric">50</div>
+      </div>
+      <div class="card">
+        <h2>New SQL rows</h2>
+        <div class="metric">1</div>
+      </div>
+      <div class="card">
+        <h2>New vectors</h2>
+        <div class="metric">50</div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>Articles collected per day (last 7 days)</h2>
+      <div class="chart-wrap">
+        <canvas id="articlesChart"></canvas>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>Average sentiment score per day</h2>
+      <div class="chart-wrap">
+        <canvas id="avgScoreChart"></canvas>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>Sentiment label distribution per day</h2>
+      <div class="chart-wrap">
+        <canvas id="distributionChart"></canvas>
+      </div>
+    </div>
+
+    <div class="panel latest-section">
+      <h2>Latest day details (2026-03-17)</h2>
+<div class='sentiment-group'>
+<h3>Bullish (1)</h3>
+<ul>
+<li><a href='https://www.apple.com/50-years-of-thinking-different/' target='_blank' rel='noopener noreferrer'>50 Years of Thinking Different</a> <span class='meta'>— Apple</span></li>
+</ul>
+</div>
+<div class='sentiment-group'>
+<h3>Neutral (7)</h3>
+<ul>
+<li><a href='https://www.bitget.com/amp/news/detail/12560605270280' target='_blank' rel='noopener noreferrer'>What Investors Need to Understand Regarding Last Quarter&#39;s $8 Million Tech ETF Sale</a> <span class='meta'>— Bitget</span></li>
+<li><a href='https://www.ad-hoc-news.de/boerse/news/ueberblick/spotify-technology-sa-stock-hits-516-usd-amid-mixed-signals-and-insider/68698521' target='_blank' rel='noopener noreferrer'>Spotify Technology SA Stock Hits 516 USD Amid Mixed Signals and Insider Sales</a> <span class='meta'>— AD HOC NEWS</span></li>
+<li><a href='https://www.marketbeat.com/instant-alerts/filing-verisign-inc-vrsn-shares-sold-by-banco-bilbao-vizcaya-argentaria-sa-2026-03-17/' target='_blank' rel='noopener noreferrer'>VeriSign, Inc. $VRSN Shares Sold by Banco Bilbao Vizcaya Argentaria S.A.</a> <span class='meta'>— MarketBeat</span></li>
+<li><a href='https://www.marketbeat.com/instant-alerts/filing-california-public-employees-retirement-system-sells-43385-shares-of-verisign-inc-vrsn-2026-03-17/' target='_blank' rel='noopener noreferrer'>California Public Employees Retirement System Sells 43,385 Shares of VeriSign, Inc. $VRSN</a> <span class='meta'>— MarketBeat</span></li>
+<li><a href='https://www.marketbeat.com/instant-alerts/filing-cinctive-capital-management-lp-trims-position-in-apple-inc-aapl-2026-03-17/' target='_blank' rel='noopener noreferrer'>Cinctive Capital Management LP Trims Position in Apple Inc. $AAPL</a> <span class='meta'>— MarketBeat</span></li>
+<li><a href='https://www.marketbeat.com/instant-alerts/filing-apple-inc-aapl-stock-holdings-reduced-by-fayez-sarofim-co-2026-03-17/' target='_blank' rel='noopener noreferrer'>Apple Inc. $AAPL Stock Holdings Reduced by Fayez Sarofim &amp; Co</a> <span class='meta'>— MarketBeat</span></li>
+<li><a href='https://www.marketbeat.com/instant-alerts/filing-gotham-asset-management-llc-buys-28823-shares-of-verisign-inc-vrsn-2026-03-17/' target='_blank' rel='noopener noreferrer'>Gotham Asset Management LLC Buys 28,823 Shares of VeriSign, Inc. $VRSN</a> <span class='meta'>— MarketBeat</span></li>
+</ul>
+</div>
+<div class='sentiment-group'>
+<h3>Somewhat-Bullish (4)</h3>
+<ul>
+<li><a href='https://www.marketbeat.com/instant-alerts/filing-hilltop-holdings-inc-boosts-stake-in-apple-inc-aapl-2026-03-17/' target='_blank' rel='noopener noreferrer'>Hilltop Holdings Inc. Boosts Stake in Apple Inc. $AAPL</a> <span class='meta'>— MarketBeat</span></li>
+<li><a href='https://www.marketbeat.com/instant-alerts/filing-apple-inc-aapl-is-hamilton-wealth-llcs-3rd-largest-position-2026-03-17/' target='_blank' rel='noopener noreferrer'>Apple Inc. $AAPL is Hamilton Wealth LLC&#39;s 3rd Largest Position</a> <span class='meta'>— MarketBeat</span></li>
+<li><a href='https://www.marketbeat.com/instant-alerts/filing-kkm-financial-llc-acquires-2565-shares-of-apple-inc-aapl-2026-03-17/' target='_blank' rel='noopener noreferrer'>KKM Financial LLC Acquires 2,565 Shares of Apple Inc. $AAPL</a> <span class='meta'>— MarketBeat</span></li>
+<li><a href='https://eand.co/apple-acquires-motionvfx-to-bolster-new-129-creator-studio-bundle' target='_blank' rel='noopener noreferrer'>Apple Acquires MotionVFX to Bolster New $129 Creator Studio Bundle</a> <span class='meta'>— Eudaimonia and Co</span></li>
+</ul>
+</div>
+    </div>
+
+    <p class="footer-note">
+      This dashboard is static HTML generated from SQLite and pipeline outputs during GitHub Actions.
+    </p>
+  </div>
+
+  <script>
+    const labels = ["2026-03-11", "2026-03-12", "2026-03-13", "2026-03-14", "2026-03-15", "2026-03-16", "2026-03-17"];
+    const articleCounts = [34, 22, 18, 12, 23, 35, 12];
+    const avgScores = [0.1581, 0.2022, 0.1193, 0.1667, 0.124, 0.1406, 0.1453];
+    const labelCounts = {"Bullish": [3, 6, 0, 1, 1, 3, 1], "Neutral": [11, 9, 10, 5, 13, 18, 7], "Somewhat-Bearish": [5, 1, 1, 1, 0, 2, 0], "Somewhat-Bullish": [15, 6, 7, 5, 9, 12, 4]};
+
+    new Chart(document.getElementById('articlesChart'), {
+      type: 'bar',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: 'Articles',
+          data: articleCounts,
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
+
+    new Chart(document.getElementById('avgScoreChart'), {
+      type: 'line',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: 'Average sentiment score',
+          data: avgScores,
+          tension: 0.25,
+          borderWidth: 2
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          y: {
+            suggestedMin: -1,
+            suggestedMax: 1
+          }
+        }
+      }
+    });
+
+    const distributionDatasets = Object.keys(labelCounts).map((label) => {
+      return {
+        label: label,
+        data: labelCounts[label],
+        borderWidth: 1
+      };
+    });
+
+    new Chart(document.getElementById('distributionChart'), {
+      type: 'bar',
+      data: {
+        labels: labels,
+        datasets: distributionDatasets
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          x: {
+            stacked: true
+          },
+          y: {
+            stacked: true,
+            beginAtZero: true
+          }
+        }
+      }
+    });
+  </script>
 </body>
 </html>
