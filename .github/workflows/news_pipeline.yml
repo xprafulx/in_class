@@ -3,11 +3,12 @@ name: News Pipeline
 on:
   workflow_dispatch:
   schedule:
-    # Monday–Friday at 10:00, 13:00, 15:00, 23:00 Danish time (approx. CET = UTC+1)
-    - cron: "0 9 * * 1-5"
-    - cron: "0 12 * * 1-5"
-    - cron: "0 14 * * 1-5"
-    - cron: "0 22 * * 1-5"
+    # Monday–Friday, slightly past the hour to avoid scheduler congestion
+    - cron: "7 9 * * 1-5"
+    - cron: "7 12 * * 1-5"
+    - cron: "7 14 * * 1-5"
+    - cron: "7 22 * * 1-5"
+
 
 permissions:
   contents: write
@@ -43,17 +44,32 @@ jobs:
         run: |
           python run_pipeline.py
 
-      - name: Commit updated data files
+      - name: Generate dashboard
+        run: |
+          python generate_dashboard.py
+
+      - name: Show generated files
+        run: |
+          echo "=== ROOT ==="
+          ls -la
+          echo "=== DATA ==="
+          ls -la data || true
+          echo "=== OUTPUTS ==="
+          ls -la outputs || true
+          echo "=== DOCS ==="
+          ls -la docs || true
+
+      - name: Commit updated artifacts
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          mkdir -p data outputs
-          git add data outputs
+          mkdir -p data outputs docs
+          git add data outputs docs
 
           if git diff --cached --quiet; then
             echo "No changes to commit."
           else
-            git commit -m "Update news pipeline data"
+            git commit -m "Update pipeline data and dashboard"
             git push
           fi
